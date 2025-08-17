@@ -1,72 +1,208 @@
-# 개인 지식 통합 대시보드 (Project: PyNote)
+# PyNote - 개인 지식 통합 대시보드
 
-## 1. 프로젝트 개요
-본 프로젝트는 여러 플랫폼에 분산된 개인의 지식 정보와 할 일(To-Do)을 하나의 데스크탑 애플리케이션으로 통합하여, 정보 접근성을 극대화하고 생산성을 향상시키는 것을 목표로 한다. PyQt 프레임워크를 기반으로 'Mission Control' UI 레이아웃을 채택하여, 사용자가 여러 정보 흐름을 한눈에 파악하고 관리할 수 있는 맞춤형 대시보드를 개발한다.
+[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://python.org)
+[![PySide6](https://img.shields.io/badge/PySide6-6.9.1+-green.svg)](https://doc.qt.io/qtforpython/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## 2. 개발 목표
-- **정보 중앙화** : 커뮤니티, 뉴스, 이메일, 클라우드 스토리지 등 다양한 소스의 데이터를 단일 인터페이스로 통합.
-- **실시간 동기화** : 주요 서비스 API와 연동하여 최신 정보를 실시간 또는 주기적으로 업데이트.
-- **통합된 사용자 경험** : QWebEngineView를 활용하여 유튜브 영상 등 웹 콘텐츠를 앱 내에서 바로 소비할 수 있는 환경 제공.
-- **모듈식 UI** : 'Mission Control' 레이아웃을 기반으로 각 정보 소스를 독립적인 위젯(패널)으로 구성하여 가독성 및 확장성 확보.
-- **유연한 데이터 수집** : 공식 API가 없는 서비스(예: 디시인사이드)는 웹 크롤링 기술을 통해 데이터를 수집하는 하이브리드 방식 채택.
+PyNote는 여러 플랫폼에 분산된 개인 지식과 할 일을 하나의 데스크톱 애플리케이션으로 통합하는 **Mission Control 스타일의 대시보드**입니다.
 
-## 3. 주요 기능 명세
-'Mission Control' 레이아웃을 기반으로 화면을 왼쪽(행동/작업), 중앙(콘텐츠 소비), 오른쪽(상황/아카이브) 3단으로 구성한다.
+## ✨ 주요 기능
 
-### ① 왼쪽 열: 행동/작업 (Action Column)
+### 🎯 3열 Mission Control 레이아웃
+- **왼쪽 (Action)**: Gmail, Google Calendar, 프로젝트 타임라인
+- **중앙 (Content)**: YouTube 플레이어, 커뮤니티 피드, 뉴스
+- **오른쪽 (Context)**: 클라우드 파일 탐색기, Markdown 뷰어
 
-#### 통합 인박스:
-- 구글 메일함: 지정된 라벨(예: '중요', '읽지 않음')의 메일 목록 표시.
-- Slack: 멘션 및 지정된 채널의 새 메시지 요약 표시.
+### 🔗 통합 서비스
+- **Google**: Gmail, Calendar, Drive
+- **커뮤니티**: DCInside, Reddit, Discord
+- **미디어**: YouTube, RSS 뉴스
+- **클라우드**: Google Drive, OneDrive (예정)
 
-#### 오늘의 일정:
-- 구글 캘린더: 오늘의 일정 및 예정된 이벤트를 시간순으로 표시.
-- 프로젝트 타임라인: 자체 관리 데이터를 기반으로 진행 중인 프로젝트의 마감일, 주요 할 일(To-Do) 표시.
+## 🚀 빠른 시작
 
-### ② 중앙 열: 핵심 콘텐츠 소비 (Content Column)
+### 1. 환경 설정
+```bash
+# 저장소 클론
+git clone https://github.com/yourusername/pynote.git
+cd pynote
 
-#### 커뮤니티 피드:
-- 디시인사이드: 지정된 갤러리의 인기글(개념글) 목록을 웹 크롤링하여 표시.
-- 레딧: 구독 중인 서브레딧의 'Hot' 포스트 목록을 Reddit API로 표시.
-- 디스코드: 지정된 서버/채널의 새 메시지를 Discord API로 표시.
-- 뉴스 피드: 주요 국내외 언론사의 RSS 피드를 구독하여 최신 뉴스 헤드라인 목록 표시.
-- 유튜브 영상 플레이어: 구독 채널의 새 영상이나 관심 영상 목록을 표시.
-    - 목록에서 영상 선택 시, 이 열의 상단에 고정된 QWebEngineView 위젯에서 즉시 재생.
+# Python 3.10+ 설치 확인
+python --version
 
-### ③ 오른쪽 열: 상황/아카이브 (Context & Archives Column)
+# Poetry 설치 (권장)
+pip install poetry
+poetry install
 
-#### 클라우드 파일 탐색기:
-- OneDrive / Google Drive: API를 통해 파일 및 폴더 목록을 트리 형태로 표시.
-- Obsidian: OneDrive에 저장된 Vault 폴더를 탐색하고, .md 파일 선택 시 내용을 읽어와 표시.
+# 또는 pip 사용
+pip install -r requirements.txt
+```
 
-#### 공개 프로필:
-- 깃허브: 내 계정의 최신 활동(Push, PR 등) 피드를 API로 표시.
-- 티스토리: 내 블로그의 최신 글 목록 및 방문자 통계를 API로 표시.
-- 내 유튜브 채널: 내가 올린 영상 목록 및 주요 통계 표시.
-- 깃허브 페이지 / 구글 페이지: 바로가기 링크 제공.
+### 2. Google API 설정
+1. [Google Cloud Console](https://console.cloud.google.com/)에서 새 프로젝트 생성
+2. Gmail, Calendar, Drive API 활성화
+3. **OAuth 클라이언트 ID (데스크톱)** 생성
+4. `credentials.json` 파일을 프로젝트 루트에 다운로드
 
-## 4. 기술 스택 (Technology Stack)
-- 언어: Python 3.10+
-- GUI 프레임워크: PyQt6 (또는 PySide6)
-- 핵심 라이브러리:
-    - 웹 브라우저 임베딩: PyQtWebEngine
-    - 웹 요청 및 크롤링: requests, BeautifulSoup4
-- API 연동:
-    - Google (Mail, Calendar, Drive): google-api-python-client
-    - Slack: slack-sdk
-    - GitHub: PyGithub
-    - Reddit: PRAW
-    - Discord: discord.py
-    - Tistory: requests (REST API 직접 호출)
-    - OneDrive: Microsoft Graph API (requests 또는 msgraph-sdk-python)
-    - MS Office 파일 읽기:
-    - Word (.docx): python-docx
-    - Excel (.xlsx): openpyxl
-    - PowerPoint (.pptx): python-pptx
+### 3. 실행
+```bash
+# Poetry 사용
+poetry run python -m app.main
 
-💡 OneDrive/Google Drive 파일 읽기: API로 파일을 다운로드한 후, 위 라이브러리들을 사용하여 내용을 읽고 표시하는 방식으로 구현 가능합니다.
+# 또는 pip 사용
+python -m app.main
 
-## 5. 기대 효과
-- 정보 탐색 시간 단축: 여러 앱과 웹사이트를 오가는 시간을 획기적으로 줄임.
-- 컨텍스트 전환 최소화: 모든 작업을 단일 애플리케이션 내에서 처리하여 집중력 유지 및 생산성 향상.
-- 개인 지식의 유기적 연결: 흩어진 정보를 한곳에 모아보며 새로운 인사이트를 얻을 수 있는 기회 제공.
+# Windows에서 배치 파일 사용
+run.bat
+```
+
+최초 실행 시 브라우저에서 Google 계정 인증 후 `token.json` 파일이 자동 생성됩니다.
+
+## 🏗️ 프로젝트 구조
+
+```
+pynote/
+├── app/
+│   ├── main.py              # 메인 애플리케이션 진입점
+│   ├── config.py            # 설정 및 환경 변수 관리
+│   ├── providers/           # 외부 서비스 연동
+│   │   ├── google.py        # Google API 통합 (Gmail, Calendar, Drive)
+│   │   └── mocks.py         # 폴백용 목업 데이터
+│   ├── ui/                  # 사용자 인터페이스
+│   │   ├── columns.py       # 3열 레이아웃 정의
+│   │   ├── panels_action.py # 왼쪽 패널 (Gmail, Calendar, Timeline)
+│   │   ├── panels_content.py # 중앙 패널 (YouTube, 피드)
+│   │   └── panels_context.py # 오른쪽 패널 (파일 탐색기)
+│   └── util/
+│       └── threads.py       # 백그라운드 작업 처리
+├── docs/                    # 문서
+├── resources/               # 리소스 파일
+├── pynote.yaml             # 사용자 설정 파일
+├── pyproject.toml          # Poetry 프로젝트 설정
+└── requirements.txt         # Python 의존성
+```
+
+## 🔧 기술 스택
+
+### 핵심 프레임워크
+- **Python 3.10+**: 메인 프로그래밍 언어
+- **PySide6 6.9.1+**: 데스크톱 GUI 프레임워크 (LGPL 라이선스)
+- **PySide6-WebEngine**: 웹 콘텐츠 임베딩 (YouTube 등)
+
+### API 및 데이터
+- **Google APIs**: Gmail, Calendar, Drive
+- **웹 크롤링**: requests, BeautifulSoup4
+- **RSS 파싱**: feedparser
+- **설정 관리**: PyYAML, python-dotenv
+
+### 개발 도구
+- **Poetry**: 의존성 및 패키지 관리
+- **pytest**: 테스트 프레임워크
+
+## 📱 사용자 인터페이스
+
+### Action Column (왼쪽)
+- **Gmail 패널**: 중요/읽지 않은 메일 표시
+- **Calendar 패널**: 오늘의 일정 및 이벤트
+- **프로젝트 타임라인**: 마감일 및 할 일 관리
+
+### Content Column (중앙)
+- **YouTube 플레이어**: 웹뷰 기반 영상 재생
+- **커뮤니티 피드**: DCInside, Reddit, Discord
+- **뉴스 피드**: RSS 기반 최신 뉴스
+
+### Context Column (오른쪽)
+- **클라우드 탐색기**: Google Drive 파일 트리
+- **Markdown 뷰어**: .md 파일 내용 표시
+
+## ⚙️ 설정
+
+### pynote.yaml 설정 예시
+```yaml
+ui:
+  dcinside_gallery: "baseball_new"
+  rss_urls:
+    - "https://news.google.com/rss?hl=ko&gl=KR&ceid=KR:ko"
+    - "https://rss.donga.com/total.xml"
+
+providers:
+  google:
+    scopes:
+      - "https://www.googleapis.com/auth/gmail.readonly"
+      - "https://www.googleapis.com/auth/calendar.readonly"
+      - "https://www.googleapis.com/auth/drive.metadata.readonly"
+```
+
+## 🔄 자동 새로고침
+
+- **5분 간격**: 모든 패널 데이터 자동 업데이트
+- **수동 새로고침**: File → Refresh all 메뉴
+- **개별 새로고침**: 각 패널의 refresh() 메서드
+
+## 🚧 개발 상태
+
+### ✅ 완성된 기능
+- [x] 기본 UI 프레임워크 및 3열 레이아웃
+- [x] Google API 연동 (인증, Gmail, Calendar, Drive)
+- [x] YouTube 플레이어 임베딩
+- [x] 탭 기반 콘텐츠 패널
+- [x] 자동 새로고침 시스템
+- [x] 목업 데이터 제공자 (API 사용 불가 시)
+- [x] 클라우드 파일 탐색기
+- [x] Markdown 뷰어
+
+### 🚧 개발 중인 기능
+- [ ] Slack, Discord, Reddit API 연동
+- [ ] 웹 크롤링 기반 DCInside 데이터 수집
+- [ ] RSS 뉴스 피드 파싱
+- [ ] 파일 다운로드 및 읽기
+
+### 📋 예정된 기능
+- [ ] OneDrive, Obsidian 연동
+- [ ] GitHub, Tistory API 연동
+- [ ] 플러그인 시스템
+- [ ] 테마 및 UI 커스터마이징
+- [ ] 백그라운드 스레드 처리 개선
+
+## 🐛 문제 해결
+
+### Google API 인증 오류
+```bash
+# credentials.json 파일이 프로젝트 루트에 있는지 확인
+ls -la credentials.json
+
+# token.json 삭제 후 재인증
+rm token.json
+python -m app.main
+```
+
+### PySide6 설치 오류
+```bash
+# Poetry 사용 권장
+poetry install
+
+# 또는 pip 사용
+pip install -r requirements.txt
+```
+
+### 의존성 충돌
+```bash
+# 가상환경 사용 권장
+poetry shell
+# 또는
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+venv\Scripts\activate     # Windows
+```
+
+## 🤝 기여하기
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 라이선스
+
+이 프로젝트는 MIT 라이선스 하에 배포됩니다. 자세한 내용은 `LICENSE` 파일을 참조하세요.
