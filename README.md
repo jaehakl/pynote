@@ -104,7 +104,7 @@ GitHub API 요청 제한을 해결하기 위해 Personal Access Token을 설정�
 
 2. **환경 변수 설정**
    ```bash
-   # apps/note/api/.env 파일 생성
+   # apps/note/ui/.env 파일 생성
    GITHUB_ACCESS_TOKEN=your_github_personal_access_token_here
    ```
 
