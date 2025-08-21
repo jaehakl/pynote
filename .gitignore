@@ -30,8 +30,7 @@ yarn-error.log*
 # .env 파일을 포함한 모든 환경변수 설정 파일을 무시합니다.
 # 단, .env.example 파일은 예외로 하여 버전 관리에 포함시킵니다.
 *.env
-**/.env
-!.env.example
+!*.env.example
 
 ### IDE / Editor ###
 .vscode/
@@ -43,17 +42,8 @@ yarn-error.log*
 Thumbs.db
 
 ### User Data ###
-credentials.json
-token.json
-.data/
-**/.data/
-.models/
-**/.models/
-*cookies.json
-**/cookies.json
-.cookies.json
-**/.cookies.json
-.sqlite3
-**/.sqlite3
+*.sqlite3
 *.db
-**/*.db
+alembic.ini
+**/video_files/
+**/figures/

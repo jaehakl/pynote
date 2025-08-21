@@ -1,208 +1,161 @@
-# PyNote - 개인 지식 통합 대시보드
+# PyNote
 
-[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://python.org)
-[![PySide6](https://img.shields.io/badge/PySide6-6.9.1+-green.svg)](https://doc.qt.io/qtforpython/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+PyNote는 GitHub 레포지토리를 탐색하고 노트를 작성할 수 있는 풀스택 웹 애플리케이션입니다.
 
-PyNote는 여러 플랫폼에 분산된 개인 지식과 할 일을 하나의 데스크톱 애플리케이션으로 통합하는 **Mission Control 스타일의 대시보드**입니다.
+## 🚀 프로젝트 개요
 
-## ✨ 주요 기능
-
-### 🎯 3열 Mission Control 레이아웃
-- **왼쪽 (Action)**: Gmail, Google Calendar, 프로젝트 타임라인
-- **중앙 (Content)**: YouTube 플레이어, 커뮤니티 피드, 뉴스
-- **오른쪽 (Context)**: 클라우드 파일 탐색기, Markdown 뷰어
-
-### 🔗 통합 서비스
-- **Google**: Gmail, Calendar, Drive
-- **커뮤니티**: DCInside, Reddit, Discord
-- **미디어**: YouTube, RSS 뉴스
-- **클라우드**: Google Drive, OneDrive (예정)
-
-## 🚀 빠른 시작
-
-### 1. 환경 설정
-```bash
-# 저장소 클론
-git clone https://github.com/yourusername/pynote.git
-cd pynote
-
-# Python 3.10+ 설치 확인
-python --version
-
-# Poetry 설치 (권장)
-pip install poetry
-poetry install
-
-# 또는 pip 사용
-pip install -r requirements.txt
-```
-
-### 2. Google API 설정
-1. [Google Cloud Console](https://console.cloud.google.com/)에서 새 프로젝트 생성
-2. Gmail, Calendar, Drive API 활성화
-3. **OAuth 클라이언트 ID (데스크톱)** 생성
-4. `credentials.json` 파일을 프로젝트 루트에 다운로드
-
-### 3. 실행
-```bash
-# Poetry 사용
-poetry run python -m app.main
-
-# 또는 pip 사용
-python -m app.main
-
-# Windows에서 배치 파일 사용
-run.bat
-```
-
-최초 실행 시 브라우저에서 Google 계정 인증 후 `token.json` 파일이 자동 생성됩니다.
+PyNote는 다음과 같은 기능을 제공합니다:
+- GitHub 레포지토리 파일 탐색
+- README 파일 자동 렌더링
+- 마크다운 파일 지원
+- 모던한 React 기반 UI
+- FastAPI 기반 백엔드 API
 
 ## 🏗️ 프로젝트 구조
 
 ```
 pynote/
-├── app/
-│   ├── main.py              # 메인 애플리케이션 진입점
-│   ├── config.py            # 설정 및 환경 변수 관리
-│   ├── providers/           # 외부 서비스 연동
-│   │   ├── google.py        # Google API 통합 (Gmail, Calendar, Drive)
-│   │   └── mocks.py         # 폴백용 목업 데이터
-│   ├── ui/                  # 사용자 인터페이스
-│   │   ├── columns.py       # 3열 레이아웃 정의
-│   │   ├── panels_action.py # 왼쪽 패널 (Gmail, Calendar, Timeline)
-│   │   ├── panels_content.py # 중앙 패널 (YouTube, 피드)
-│   │   └── panels_context.py # 오른쪽 패널 (파일 탐색기)
-│   └── util/
-│       └── threads.py       # 백그라운드 작업 처리
-├── docs/                    # 문서
-├── resources/               # 리소스 파일
-├── pynote.yaml             # 사용자 설정 파일
-├── pyproject.toml          # Poetry 프로젝트 설정
-└── requirements.txt         # Python 의존성
+├── apps/
+│   └── note/
+│       ├── api/                 # FastAPI 백엔드
+│       │   ├── app/
+│       │   │   ├── main.py     # 메인 API 서버
+│       │   │   ├── db.py       # 데이터베이스 설정
+│       │   │   ├── initserver.py # 서버 초기화
+│       │   │   └── service/
+│       │   │       └── github_service.py # GitHub API 서비스
+│       │   ├── pyproject.toml  # Python 의존성
+│       │   └── README.md       # API 상세 문서
+│       └── ui/                  # React 프론트엔드
+│           ├── src/
+│           │   ├── App.jsx      # 메인 앱 컴포넌트
+│           │   ├── pages/
+│           │   │   └── github.jsx # GitHub 탐색기 컴포넌트
+│           │   └── api/
+│           │       └── api.js   # API 클라이언트
+│           ├── package.json     # Node.js 의존성
+│           └── vite.config.js   # Vite 설정
+├── pnpm-workspace.yaml          # pnpm 워크스페이스 설정
+└── README.md                    # 이 파일
 ```
 
-## 🔧 기술 스택
+## 🛠️ 기술 스택
 
-### 핵심 프레임워크
-- **Python 3.10+**: 메인 프로그래밍 언어
-- **PySide6 6.9.1+**: 데스크톱 GUI 프레임워크 (LGPL 라이선스)
-- **PySide6-WebEngine**: 웹 콘텐츠 임베딩 (YouTube 등)
+### 백엔드
+- **Python 3.11+**
+- **FastAPI** - 현대적이고 빠른 웹 프레임워크
+- **SQLAlchemy** - ORM 및 데이터베이스 추상화
+- **Uvicorn** - ASGI 서버
+- **pgvector** - 벡터 데이터베이스 지원
+- **Poetry** - 의존성 관리
 
-### API 및 데이터
-- **Google APIs**: Gmail, Calendar, Drive
-- **웹 크롤링**: requests, BeautifulSoup4
-- **RSS 파싱**: feedparser
-- **설정 관리**: PyYAML, python-dotenv
+### 프론트엔드
+- **React 19** - 사용자 인터페이스 라이브러리
+- **Vite** - 빠른 개발 서버 및 빌드 도구
+- **RSuite** - React UI 컴포넌트 라이브러리
+- **React Router** - 클라이언트 사이드 라우팅
+- **React Markdown** - 마크다운 렌더링
+- **Axios** - HTTP 클라이언트
 
-### 개발 도구
-- **Poetry**: 의존성 및 패키지 관리
-- **pytest**: 테스트 프레임워크
+## 📋 요구사항
 
-## 📱 사용자 인터페이스
+- Python 3.11 이상
+- Node.js 18 이상
+- pnpm 패키지 매니저
 
-### Action Column (왼쪽)
-- **Gmail 패널**: 중요/읽지 않은 메일 표시
-- **Calendar 패널**: 오늘의 일정 및 이벤트
-- **프로젝트 타임라인**: 마감일 및 할 일 관리
+## 🚀 설치 및 실행
 
-### Content Column (중앙)
-- **YouTube 플레이어**: 웹뷰 기반 영상 재생
-- **커뮤니티 피드**: DCInside, Reddit, Discord
-- **뉴스 피드**: RSS 기반 최신 뉴스
-
-### Context Column (오른쪽)
-- **클라우드 탐색기**: Google Drive 파일 트리
-- **Markdown 뷰어**: .md 파일 내용 표시
-
-## ⚙️ 설정
-
-### pynote.yaml 설정 예시
-```yaml
-ui:
-  dcinside_gallery: "baseball_new"
-  rss_urls:
-    - "https://news.google.com/rss?hl=ko&gl=KR&ceid=KR:ko"
-    - "https://rss.donga.com/total.xml"
-
-providers:
-  google:
-    scopes:
-      - "https://www.googleapis.com/auth/gmail.readonly"
-      - "https://www.googleapis.com/auth/calendar.readonly"
-      - "https://www.googleapis.com/auth/drive.metadata.readonly"
-```
-
-## 🔄 자동 새로고침
-
-- **5분 간격**: 모든 패널 데이터 자동 업데이트
-- **수동 새로고침**: File → Refresh all 메뉴
-- **개별 새로고침**: 각 패널의 refresh() 메서드
-
-## 🚧 개발 상태
-
-### ✅ 완성된 기능
-- [x] 기본 UI 프레임워크 및 3열 레이아웃
-- [x] Google API 연동 (인증, Gmail, Calendar, Drive)
-- [x] YouTube 플레이어 임베딩
-- [x] 탭 기반 콘텐츠 패널
-- [x] 자동 새로고침 시스템
-- [x] 목업 데이터 제공자 (API 사용 불가 시)
-- [x] 클라우드 파일 탐색기
-- [x] Markdown 뷰어
-
-### 🚧 개발 중인 기능
-- [ ] Slack, Discord, Reddit API 연동
-- [ ] 웹 크롤링 기반 DCInside 데이터 수집
-- [ ] RSS 뉴스 피드 파싱
-- [ ] 파일 다운로드 및 읽기
-
-### 📋 예정된 기능
-- [ ] OneDrive, Obsidian 연동
-- [ ] GitHub, Tistory API 연동
-- [ ] 플러그인 시스템
-- [ ] 테마 및 UI 커스터마이징
-- [ ] 백그라운드 스레드 처리 개선
-
-## 🐛 문제 해결
-
-### Google API 인증 오류
+### 1. 저장소 클론
 ```bash
-# credentials.json 파일이 프로젝트 루트에 있는지 확인
-ls -la credentials.json
-
-# token.json 삭제 후 재인증
-rm token.json
-python -m app.main
+git clone <repository-url>
+cd pynote
 ```
 
-### PySide6 설치 오류
+### 2. 백엔드 실행
 ```bash
-# Poetry 사용 권장
+cd apps/note/api
 poetry install
-
-# 또는 pip 사용
-pip install -r requirements.txt
+poetry run python -m uvicorn app.main:app --reload
 ```
 
-### 의존성 충돌
+### 3. 프론트엔드 실행
 ```bash
-# 가상환경 사용 권장
-poetry shell
-# 또는
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-venv\Scripts\activate     # Windows
+cd apps/note/ui
+pnpm install
+pnpm dev
 ```
 
-## 🤝 기여하기
+### 4. 전체 프로젝트 실행 (워크스페이스)
+```bash
+# 루트 디렉토리에서
+pnpm install
+pnpm run dev:note
+```
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+## 🔧 환경 설정
+
+### GitHub API 설정
+GitHub API 요청 제한을 해결하기 위해 Personal Access Token을 설정할 수 있습니다.
+
+1. **GitHub Personal Access Token 생성**
+   - GitHub Settings > Developer settings > Personal access tokens
+   - "Generate new token" 클릭
+   - `public_repo` 권한 부여
+
+2. **환경 변수 설정**
+   ```bash
+   # apps/note/api/.env 파일 생성
+   GITHUB_ACCESS_TOKEN=your_github_personal_access_token_here
+   ```
+
+## 📚 API 문서
+
+### GitHub 관련 엔드포인트
+- `GET /github/files/{owner}/{repo}` - 레포지토리 파일 목록
+- `GET /github/content/{owner}/{repo}` - 파일 내용 조회
+- `GET /github/search` - 레포지토리 검색
+- `GET /github/repo/{owner}/{repo}` - 레포지토리 정보
+
+자세한 API 문서는 `apps/note/api/README.md`를 참조하세요.
+
+## 🎯 주요 기능
+
+### GitHub 레포지토리 탐색
+- 사용자명과 레포지토리명으로 접근
+- 파일 및 디렉토리 구조 탐색
+- 브레드크럼 네비게이션
+
+### 마크다운 지원
+- README.md 파일 자동 감지 및 렌더링
+- GitHub Flavored Markdown (GFM) 지원
+- 한글 인코딩 자동 처리
+
+### 사용자 인터페이스
+- 반응형 디자인
+- 모던한 UI 컴포넌트
+- 직관적인 네비게이션
+
+## ⚠️ 보안 주의사항
+
+**이 프로젝트는 로컬 개발 환경에서만 사용하도록 설계되었습니다.**
+
+### 🚫 공개 배포 금지
+- GitHub Personal Access Token이 클라이언트 사이드에 노출될 수 있습니다
+- 프로덕션 환경에서 사용 시 보안 위험이 있습니다
+
+### �� 로컬 사용 권장
+- 개발 및 개인 학습 목적으로만 사용
+- GitHub 토큰은 반드시 `.env` 파일에 저장하고 `.gitignore`에 포함
+- 토큰을 소스코드에 직접 입력하지 마세요
 
 ## 📄 라이선스
 
 이 프로젝트는 MIT 라이선스 하에 배포됩니다. 자세한 내용은 `LICENSE` 파일을 참조하세요.
+
+## 👨‍💻 개발자
+
+- **Jaehak Lee** - [leejaehak87@gmail.com](mailto:leejaehak87@gmail.com)
+
+## 📞 지원
+
+프로젝트에 대한 질문이나 제안사항이 있으시면 이슈를 생성해 주세요.
