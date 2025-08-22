@@ -103,10 +103,6 @@ const GitHubExplorer = ({ owner, repo, subpath, showReadme = false, showList = f
     window.open(githubUrl, '_blank');
   };
 
-  const handleGoHome = () => {
-    setPath('');
-  };
-
   const getFileIcon = (type, name) => {
     if (type === 'dir') return '📁';
     if (name.endsWith('.js') || name.endsWith('.jsx')) return '📄';
