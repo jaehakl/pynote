@@ -2,7 +2,7 @@
 
 PyNote는 GitHub, YouTube, Tistory 등 다양한 플랫폼의 콘텐츠를 통합하여 보여주는 풀스택 웹 애플리케이션입니다.
 
-![image](https://github.com/user-attachments/assets/e9a93d4f-467f-4c67-8dea-611ee08a6124)
+![image](https://github.com/user-attachments/assets/d2fda290-d9d7-4a37-870e-56c4b819f368)
 
 ## 🚀 프로젝트 개요
 
