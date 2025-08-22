@@ -10,5 +10,6 @@ export default defineConfig({
   define: {
     // 환경변수를 클라이언트에서 사용할 수 있도록 정의
     'process.env.GITHUB_ACCESS_TOKEN': JSON.stringify(process.env.GITHUB_ACCESS_TOKEN),
+    'process.env.YOUTUBE_API_KEY': JSON.stringify(process.env.YOUTUBE_API_KEY),
   },
 })

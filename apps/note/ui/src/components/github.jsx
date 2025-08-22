@@ -144,7 +144,6 @@ const GitHubExplorer = ({ owner, repo, subpath, showReadme = false, showList = f
         <>
           {showReadme && readmeContent && (
             <div className="readme-section">
-              <h3>📖 README</h3>
               <div className="readme-content">
                 <ReactMarkdown 
                    remarkPlugins={[remarkGfm]}>

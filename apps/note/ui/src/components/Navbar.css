@@ -1,0 +1,47 @@
+.navbar-custom {
+  transition: all 0.3s ease;
+}
+
+.navbar-custom .rs-nav-item {
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 6px;
+  margin: 0 4px;
+}
+
+.navbar-custom .rs-nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
+}
+
+.navbar-custom .rs-nav-item.active {
+  background-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.navbar-custom .rs-btn {
+  transition: all 0.3s ease;
+}
+
+.navbar-custom .rs-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-brand {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  letter-spacing: 1px;
+}
+
+@media (max-width: 768px) {
+  .navbar-custom .rs-nav-item {
+    padding: 6px 12px;
+    margin: 0 2px;
+    font-size: 14px;
+  }
+  
+  .navbar-brand {
+    font-size: 1.2rem !important;
+    padding: 0 10px !important;
+  }
+}
