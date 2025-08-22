@@ -9,9 +9,6 @@ const NavbarComponent = () => {
 
   const navItems = [
     { name: '홈', path: '/' },
-    { name: 'GitHub', path: '/github' },
-    { name: '블로그', path: '/blog' },
-    { name: '유튜브', path: '/youtube' }
   ];
 
   const isActive = (path) => {

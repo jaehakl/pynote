@@ -2,10 +2,16 @@ import React, { useState, useEffect } from 'react';
 import './tistory.css';
 import { getTistoryContents } from '../api/api';
 
-const TistoryRSS = ({url}) => {
+const TistoryRSS = ({url, dataUpdated=null}) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (dataUpdated) {
+      dataUpdated(posts);
+    }
+  }, [posts]);
 
   // HTML 엔티티 디코딩 함수
   const decodeHtmlEntities = (text) => {

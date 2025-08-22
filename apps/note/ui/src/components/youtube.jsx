@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { getPlaylistItems, getPlaylistInfo, getVideoInfo } from '../api/api';
+import { getPlaylistItems, getVideoInfo } from '../api/api';
 import './youtube.css';
 
-const YouTubePlaylist = ({ playlistId, maxResults = 50 }) => {
-  const [playlistInfo, setPlaylistInfo] = useState(null);
+const YouTubePlaylist = ({ playlistId, maxResults = 50, dataUpdated=null }) => {
   const [videos, setVideos] = useState([]);
   const [videoDetails, setVideoDetails] = useState({});
   const [loading, setLoading] = useState(false);
@@ -11,7 +10,6 @@ const YouTubePlaylist = ({ playlistId, maxResults = 50 }) => {
   const [nextPageToken, setNextPageToken] = useState(null);
   const [hasMoreVideos, setHasMoreVideos] = useState(true);
   const [currentPlayingVideo, setCurrentPlayingVideo] = useState(null);
-  const [isPlayerReady, setIsPlayerReady] = useState(false);
 
   // YouTube iframe API 로드
   useEffect(() => {
@@ -21,22 +19,13 @@ const YouTubePlaylist = ({ playlistId, maxResults = 50 }) => {
       const firstScriptTag = document.getElementsByTagName('script')[0];
       firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     }
-
-    window.onYouTubeIframeAPIReady = () => {
-      setIsPlayerReady(true);
-    };
   }, []);
 
-  const fetchPlaylistInfo = async () => {
-    try {
-      const response = await getPlaylistInfo(playlistId);
-      if (response.data.items && response.data.items.length > 0) {
-        setPlaylistInfo(response.data.items[0]);
-      }
-    } catch (err) {
-      console.error('재생목록 정보를 가져올 수 없습니다:', err);
+  useEffect(() => {
+    if (dataUpdated) {
+      dataUpdated(videoDetails);
     }
-  };
+  }, [videoDetails]);
 
   const fetchVideos = async (pageToken = null) => {
     setLoading(true);
@@ -156,21 +145,13 @@ const YouTubePlaylist = ({ playlistId, maxResults = 50 }) => {
     }
   };
 
-  const playVideoInline = (videoId) => {
-    setCurrentPlayingVideo(videoId);
-  };
-
   const stopVideo = () => {
     setCurrentPlayingVideo(null);
   };
 
-  const openPlaylist = () => {
-    window.open(`https://www.youtube.com/playlist?list=${playlistId}`, '_blank');
-  };
 
   useEffect(() => {
     if (playlistId) {
-      fetchPlaylistInfo();
       fetchVideos();
     }
   }, [playlistId]);

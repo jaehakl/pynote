@@ -5,13 +5,25 @@ import remarkGfm from 'remark-gfm';
 import { remark } from 'remark';
 import './github.css';
 
-const GitHubExplorer = ({ owner, repo, subpath, showReadme = false, showList = false }) => {
+const GitHubExplorer = ({ owner, repo, subpath, showReadme = false, showList = false, dataUpdated=null }) => {
   const [path, setPath] = useState(subpath || '');
   const [contents, setContents] = useState([]);
   const [readmeContent, setReadmeContent] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  useEffect(() => {
+    if (dataUpdated) {
+      const data = {}      
+      if (showReadme) {
+        data.readme = readmeContent;
+      }
+      if (showList) {
+        data.contents = contents;
+      }
+      dataUpdated(data);
+    }
+  }, [readmeContent, contents]);
 
   const fetchContents = async () => {
     setLoading(true);
