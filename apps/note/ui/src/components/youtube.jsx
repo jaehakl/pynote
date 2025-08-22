@@ -9,7 +9,7 @@ const YouTubePlaylist = ({ playlistId, maxResults = 50, dataUpdated=null }) => {
   const [error, setError] = useState(null);
   const [nextPageToken, setNextPageToken] = useState(null);
   const [hasMoreVideos, setHasMoreVideos] = useState(true);
-  const [currentPlayingVideo, setCurrentPlayingVideo] = useState(null);
+  const [expandedVideos, setExpandedVideos] = useState(new Set());
 
   // YouTube iframe API 로드
   useEffect(() => {
@@ -105,27 +105,6 @@ const YouTubePlaylist = ({ playlistId, maxResults = 50, dataUpdated=null }) => {
     }
   };
 
-  const formatDuration = (duration) => {
-    if (!duration) return '';
-    
-    // ISO 8601 형식의 duration을 읽기 쉬운 형태로 변환
-    const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
-    if (!match) return '';
-    
-    const hours = (match[1] || '').replace('H', '');
-    const minutes = (match[2] || '').replace('M', '');
-    const seconds = (match[3] || '').replace('S', '');
-    
-    let result = '';
-    if (hours) result += `${hours}:`;
-    if (minutes) result += `${minutes.padStart(2, '0')}:`;
-    else result += '00:';
-    if (seconds) result += seconds.padStart(2, '0');
-    else result += '00';
-    
-    return result;
-  };
-
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('ko-KR', {
@@ -135,20 +114,24 @@ const YouTubePlaylist = ({ playlistId, maxResults = 50, dataUpdated=null }) => {
     });
   };
 
-  const openVideo = (videoId) => {
-    if (currentPlayingVideo === videoId) {
-      // 이미 재생 중인 영상이면 재생 중지
-      setCurrentPlayingVideo(null);
-    } else {
-      // 새로운 영상 재생
-      setCurrentPlayingVideo(videoId);
-    }
+  const toggleVideo = (videoId) => {
+    setExpandedVideos(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(videoId)) {
+        newSet.delete(videoId);
+      } else {
+        newSet.add(videoId);
+      }
+      return newSet;
+    });
   };
 
-  const stopVideo = () => {
-    setCurrentPlayingVideo(null);
+  // 마우스 휠을 가로 스크롤로 변환하는 함수
+  const handleWheel = (e) => {
+    e.preventDefault();
+    const container = e.currentTarget;
+    container.scrollLeft += e.deltaY;
   };
-
 
   useEffect(() => {
     if (playlistId) {
@@ -177,50 +160,39 @@ const YouTubePlaylist = ({ playlistId, maxResults = 50, dataUpdated=null }) => {
 
       {/* 영상 목록 */}
       {videos.length > 0 && (
-        <div className="videos-container">
-          
-          {/* 현재 재생 중인 영상 */}
-          {currentPlayingVideo && (
-            <div className="current-video-player">
-              <div className="player-header">
-                <h5>현재 재생 중</h5>
-                <button className="close-player-btn" onClick={stopVideo}>
-                  ✕
-                </button>
-              </div>
-              <div className="youtube-player-container">
-                <iframe
-                  width="100%"
-                  height="400"
-                  src={`https://www.youtube.com/embed/${currentPlayingVideo}?autoplay=1&rel=0&modestbranding=1`}
-                  title="YouTube video player"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                ></iframe>
-              </div>
-            </div>
-          )}
-          
-          <div className="videos-grid">
-            {videos.map((item, index) => (
+        <div className="videos-grid">
+          {videos.map((item, index) => {
+            const videoId = item.contentDetails.videoId;
+            const isExpanded = expandedVideos.has(videoId);
+            
+            return (
               <div key={item.id} className="video-card">
-                <div className="video-thumbnail" onClick={() => openVideo(item.contentDetails.videoId)}>
-                  <img 
-                    src={item.snippet.thumbnails.medium.url} 
-                    alt={item.snippet.title}
-                    loading="lazy"
-                  />
-                  <div className="video-duration">
-                    {videoDetails[item.contentDetails.videoId]?.contentDetails?.duration ? 
-                     formatDuration(videoDetails[item.contentDetails.videoId].contentDetails.duration) :
-                     '--:--'}
-                  </div>
-                  <div className="play-overlay">
-                    <div className="play-button">
-                      {currentPlayingVideo === item.contentDetails.videoId ? '⏸️' : '▶️'}
+                <div 
+                  className="video-embed-container"
+                  onClick={() => toggleVideo(videoId)}
+                >
+                  {isExpanded ? (
+                    <iframe
+                      width="100%"
+                      height="120"
+                      src={`https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1&controls=1&showinfo=0&iv_load_policy=3&fs=0&disablekb=1&autohide=1&color=white&autoplay=1`}
+                      title={item.snippet.title}
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    ></iframe>
+                  ) : (
+                    <div className="video-thumbnail">
+                      <img 
+                        src={item.snippet.thumbnails.medium.url} 
+                        alt={item.snippet.title}
+                        loading="lazy"
+                      />
+                      <div className="play-overlay">
+                        <div className="play-button">▶️</div>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
                 <div className="video-info">
                   <h5 className="video-title" title={item.snippet.title}>
@@ -228,11 +200,10 @@ const YouTubePlaylist = ({ playlistId, maxResults = 50, dataUpdated=null }) => {
                   </h5>
                   <p className="video-channel">{item.snippet.videoOwnerChannelTitle}</p>
                   <p className="video-date">{formatDate(item.snippet.publishedAt)}</p>
-
                 </div>
               </div>
-            ))}
-          </div>
+            );
+          })}
         </div>
       )}
 

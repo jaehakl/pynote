@@ -11,7 +11,7 @@ function App() {
   return (
     <>
       <NavbarComponent />
-      <Container style={{ marginTop: '20px' }}>
+      <Container>
         <Routes>
           <Route path="/" element={<Dashboard />} />
         </Routes>

@@ -94,36 +94,60 @@ function Dashboard() {
     console.log('생성된 마크다운:', markdown);
   }
 
+  // 마우스 휠을 가로 스크롤로 변환하는 함수
+  const handleWheel = (e) => {
+    e.preventDefault();
+    const container = e.currentTarget;
+    container.scrollLeft += e.deltaY;
+  };
+
   return (
-    <>
-      <Sidebar style={{ minWidth: '300px' }}>
-        <YouTubePlaylist playlistId={YOUTUBE_PLAYLIST_ID} maxResults={20} dataUpdated={setYoutubeData}/>
-      </Sidebar>
-      <Content>
-        <div className="dashboard-header">
-          <h1>데이터 대시보드</h1>
-          <Button 
+    <div className="dashboard-container">
+      <div className="dashboard-main">
+        {/* 왼쪽 사이드바 - GitHub Explorer */}
+        <Sidebar className="dashboard-sidebar">
+          <div className="sidebar-content">
+            <div className="github-explorer-container">
+        <Button 
             appearance="primary" 
-            size="lg"
+            size="sm"
+            style={{position: 'absolute', bottom: '20px', left: '20px'}}
             onClick={collectData}
             className="collect-data-btn"
           >
-            📋 데이터 수집 및 복사
+            📋
           </Button>
-        </div>
-        <GitHubExplorer owner={OWNER} repo={GITHUB_REPO_NAME} showList={true} dataUpdated={(data) => handleGithubDataUpdated(GITHUB_REPO_NAME, data)}/>      
-        <div className="github-multi-explorer">          
-        {repos.map((repo) => (
-            <div key={repo.id} style={{margin: "0", padding: "0"}}>
-                <GitHubExplorer owner={OWNER} repo={repo.name} showReadme={true} dataUpdated={(data) => handleGithubDataUpdated(repo.name, data)}/>
+
+              <GitHubExplorer owner={OWNER} repo={GITHUB_REPO_NAME} showList={true} dataUpdated={(data) => handleGithubDataUpdated(GITHUB_REPO_NAME, data)}/>
             </div>
-        ))}
-        </div>
-      </Content>
-      <Sidebar style={{ minWidth: '400px' }}>
-        <TistoryRSS url={TISTORY_RSS_URL} dataUpdated={setTistoryData}/>
-      </Sidebar>
-    </>
+          </div>
+        </Sidebar>
+        
+        {/* 메인 콘텐츠 영역 */}
+        <Content className="dashboard-content">          
+          {/* GitHub 멀티 익스플로러 */}
+          <div className="github-multi-explorer-container">          
+            {repos.map((repo) => (
+              <div key={repo.id} className="repo-item">
+                <GitHubExplorer owner={OWNER} repo={repo.name} showReadme={true} dataUpdated={(data) => handleGithubDataUpdated(repo.name, data)}/>
+              </div>
+            ))}
+          </div>
+          
+          {/* 하단 YouTube 플레이리스트 - 가로 스크롤 */}
+          <div className="youtube-playlist-container" onWheel={handleWheel}>
+            <YouTubePlaylist playlistId={YOUTUBE_PLAYLIST_ID} maxResults={20} dataUpdated={setYoutubeData}/>
+          </div>
+        </Content>
+        
+        {/* 오른쪽 사이드바 - Tistory RSS */}
+        <Sidebar className="dashboard-sidebar-wide">
+          <div className="sidebar-content">
+            <TistoryRSS url={TISTORY_RSS_URL} dataUpdated={setTistoryData}/>
+          </div>
+        </Sidebar>
+      </div>
+    </div>
   );
 }
 
