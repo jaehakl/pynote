@@ -8,6 +8,7 @@ import './dashboard.css';
 
 const OWNER = "jaehakl";
 const GITHUB_REPO_NAME = "ProposalHub";
+const GITHUB_DOCS_PATH = "docs";
 const YOUTUBE_PLAYLIST_ID = "PL2xobfxfMTdvAeqsSs_azx-x3hCZAt_KE";
 const TISTORY_RSS_URL = "https://identicalparticle.com/rss";
 
@@ -118,7 +119,7 @@ function Dashboard() {
             📋
           </Button>
 
-              <GitHubExplorer owner={OWNER} repo={GITHUB_REPO_NAME} showList={true} dataUpdated={(data) => handleGithubDataUpdated(GITHUB_REPO_NAME, data)}/>
+              <GitHubExplorer owner={OWNER} repo={GITHUB_REPO_NAME} subpath={GITHUB_DOCS_PATH} showList={true} dataUpdated={(data) => handleGithubDataUpdated(GITHUB_REPO_NAME, data)}/>
             </div>
           </div>
         </Sidebar>

@@ -16,9 +16,9 @@
 
 /* 사이드바 공통 스타일 */
 .dashboard-sidebar {
-  min-width: 300px;
-  max-width: 300px;
-  flex: 0 0 300px;
+  min-width: 350px;
+  max-width: 350px;
+  flex: 0 0 350px;
   display: flex;
   flex-direction: column;
 }
